@@ -1,0 +1,109 @@
+#include "dataset.h"
+#include <stdio.h>
+#include <time.h>
+
+typedef struct {
+    double mean;
+    double var;
+} Stats;
+
+typedef struct {
+    Stats stats[2][MAX_FEATURES];
+    double prior[2];
+} NBModel;
+
+NBModel train_nb(Dataset* train) {
+    NBModel model;
+    int count[2] = {0, 0};
+    for (int i = 0; i < train->size; i++) count[train->data[i].label]++;
+
+    model.prior[0] = (double)count[0] / train->size;
+    model.prior[1] = (double)count[1] / train->size;
+
+    for (int label = 0; label < 2; label++) {
+        for (int j = 0; j < train->num_features; j++) {
+            double sum = 0;
+            int n = 0;
+            for (int i = 0; i < train->size; i++) {
+                if (train->data[i].label == label) {
+                    sum += train->data[i].features[j];
+                    n++;
+                }
+            }
+            double mean = sum / n;
+            double var_sum = 0;
+            for (int i = 0; i < train->size; i++) {
+                if (train->data[i].label == label) {
+                    var_sum += pow(train->data[i].features[j] - mean, 2);
+                }
+            }
+            model.stats[label][j].mean = mean;
+            model.stats[label][j].var = var_sum / n + 1e-9;
+        }
+    }
+    return model;
+}
+
+int predict_nb(NBModel* model, double* features, int num_features) {
+    double max_prob = -1e18;
+    int best_label = 0;
+
+    for (int label = 0; label < 2; label++) {
+        double prob = log(model->prior[label]);
+        for (int j = 0; j < num_features; j++) {
+            double mean = model->stats[label][j].mean;
+            double var = model->stats[label][j].var;
+            double x = features[j];
+            double exponent = exp(-pow(x - mean, 2) / (2 * var));
+            prob += log((1.0 / sqrt(2 * M_PI * var)) * exponent);
+        }
+        if (prob > max_prob) {
+            max_prob = prob;
+            best_label = label;
+        }
+    }
+    return best_label;
+}
+
+int main() {
+    srand(42);
+    Dataset ds = load_dataset("IBM_HR_Attrition.csv");
+    if (ds.size == 0) return 1;
+
+    normalize_dataset(&ds);
+    shuffle_dataset(&ds);
+
+    int train_size = ds.size * 0.8;
+    Dataset train;
+    train.size = train_size;
+    train.num_features = ds.num_features;
+    for(int i=0; i<train_size; i++) train.data[i] = ds.data[i];
+
+    NBModel model = train_nb(&train);
+
+    int test_size = ds.size - train_size;
+    int tp = 0, tn = 0, fp = 0, fn = 0;
+
+    for (int i = train_size; i < ds.size; i++) {
+        int pred = predict_nb(&model, ds.data[i].features, ds.num_features);
+        int actual = ds.data[i].label;
+
+        if (pred == 1 && actual == 1) tp++;
+        else if (pred == 0 && actual == 0) tn++;
+        else if (pred == 1 && actual == 0) fp++;
+        else if (pred == 0 && actual == 1) fn++;
+    }
+
+    double acc = (double)(tp + tn) / test_size;
+    double prec = (tp + fp > 0) ? (double)tp / (tp + fp) : 0;
+    double rec = (tp + fn > 0) ? (double)tp / (tp + fn) : 0;
+    double f1 = (prec + rec > 0) ? 2 * prec * rec / (prec + rec) : 0;
+
+    printf("Naive Bayes Results:\n");
+    printf("Accuracy: %.4f\n", acc);
+    printf("Precision: %.4f\n", prec);
+    printf("Recall: %.4f\n", rec);
+    printf("F1-score: %.4f\n", f1);
+
+    return 0;
+}
