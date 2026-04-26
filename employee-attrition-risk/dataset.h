@@ -18,6 +18,8 @@ typedef struct {
     DataPoint data[MAX_SAMPLES];
     int size;
     int num_features;
+    double min[MAX_FEATURES];
+    double max[MAX_FEATURES];
 } Dataset;
 
 // Indices of numeric features in the IBM dataset
@@ -70,24 +72,33 @@ Dataset load_dataset(const char* filename) {
 }
 
 void normalize_dataset(Dataset* ds) {
-    double min[MAX_FEATURES], max[MAX_FEATURES];
     for (int j = 0; j < ds->num_features; j++) {
-        min[j] = 1e18;
-        max[j] = -1e18;
+        ds->min[j] = 1e18;
+        ds->max[j] = -1e18;
     }
 
     for (int i = 0; i < ds->size; i++) {
         for (int j = 0; j < ds->num_features; j++) {
-            if (ds->data[i].features[j] < min[j]) min[j] = ds->data[i].features[j];
-            if (ds->data[i].features[j] > max[j]) max[j] = ds->data[i].features[j];
+            if (ds->data[i].features[j] < ds->min[j]) ds->min[j] = ds->data[i].features[j];
+            if (ds->data[i].features[j] > ds->max[j]) ds->max[j] = ds->data[i].features[j];
         }
     }
 
     for (int i = 0; i < ds->size; i++) {
         for (int j = 0; j < ds->num_features; j++) {
-            if (max[j] - min[j] > 1e-9) {
-                ds->data[i].features[j] = (ds->data[i].features[j] - min[j]) / (max[j] - min[j]);
+            if (ds->max[j] - ds->min[j] > 1e-9) {
+                ds->data[i].features[j] = (ds->data[i].features[j] - ds->min[j]) / (ds->max[j] - ds->min[j]);
             }
+        }
+    }
+}
+
+void normalize_raw_input(Dataset* ds, double* raw_input, double* normalized_output) {
+    for (int j = 0; j < ds->num_features; j++) {
+        if (ds->max[j] - ds->min[j] > 1e-9) {
+            normalized_output[j] = (raw_input[j] - ds->min[j]) / (ds->max[j] - ds->min[j]);
+        } else {
+            normalized_output[j] = 0.0;
         }
     }
 }

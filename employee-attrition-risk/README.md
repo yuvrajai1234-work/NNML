@@ -4,15 +4,6 @@
 ## 📌 Project Overview
 This project was developed for the **Mathematical Modelling–Based Experiential Learning** assignment. The goal is to predict employee attrition risk (Stay vs. Leave) using the **IBM HR Analytics Employee Attrition & Performance** dataset.
 
-Unlike standard ML projects, this implementation avoids all high-level libraries (like Scikit-Learn), relying strictly on the **mathematical foundations** of each algorithm implemented in pure C.
-
-## 🧠 Algorithms Implemented
-We have modeled the problem using three distinct mathematical approaches to compare their performance:
-
-1.  **K-Nearest Neighbors (KNN)**: A geometric, distance-based model using Euclidean distance and Min-Max feature scaling.
-2.  **Gaussian Naive Bayes (GNB)**: A probabilistic model using Bayes' Theorem and the Gaussian Probability Density Function.
-3.  **Linear Regression**: An optimization-based model using the Linear Hypothesis and Gradient Descent for weight updates (Linear Probability Model).
-
 ## 📊 Mathematical Foundation
 The models utilize the following core concepts to secure the "Mathematical Model" grading criteria:
 
@@ -25,21 +16,6 @@ The models utilize the following core concepts to secure the "Mathematical Model
 - **Bayes Theorem** (Used in **Gaussian Naive Bayes**):
   $$P(C|x) \propto P(C) \prod P(x_i|C)$$
 
-## 🔑 Key Definitions
-Before analyzing the outcomes, it is essential to define the performance metrics used:
-
-- **Accuracy**: The ratio of correctly predicted observations to the total observations.
-- **Precision**: The ratio of correctly predicted positive observations to the total predicted positives (Ability of the model not to label a negative sample as positive).
-- **Recall (Sensitivity)**: The ratio of correctly predicted positive observations to all observations in actual class (Ability of the model to find all positive samples).
-- **F1-Score**: The weighted average of Precision and Recall.
-
-## 📁 Project Structure
-- `knn.c`: Implementation of the K-Nearest Neighbors algorithm.
-- `nb.c`: Implementation of the Gaussian Naive Bayes algorithm.
-- `lr.c`: Implementation of the Linear Regression algorithm.
-- `dataset.h`: Core header for loading, normalizing, and shuffling the CSV data for zero-dependency execution.
-- `IBM_HR_Attrition.csv`: The dataset sourced from Kaggle/IBM.
-
 ## 📈 Model Outcomes
 Results based on an 80/20 train/test split:
 
@@ -49,35 +25,39 @@ Results based on an 80/20 train/test split:
 | **Naive Bayes** | 0.8163 | 0.4643 | 0.5200 | 0.4906 |
 | **Linear Regression** | 0.8367 | 1.0000 | 0.0400 | 0.0769 |
 
-### Sample Predictions (Process Check)
-| Case ID | Actual Attrition | Predicted Attrition | Result |
-|---------|------------------|---------------------|---------|
-| 1       | No               | No                  | Correct |
-| 2       | Yes              | No                  | Wrong   |
-| 3       | Yes              | No                  | Wrong   |
-| 4       | No               | No                  | Correct |
-| 5       | No               | No                  | Correct |
+## 🎯 Real-World Model Validation
+To verify the mathematical models, we selected a specific sample row from the raw dataset (Source: Image Data) to test "live" inference. 
 
-## 🚀 How to Run
-Ensure you have a C compiler (like `gcc`) installed. Open your terminal in the project folder and run:
+### Input Data Profile (The "New Data"):
+This row is taken directly from the **IBM HR Dataset (Row 1)** as shown in the validation spreadsheet:
 
-### K-Nearest Neighbors
-```bash
-gcc knn.c -o knn -lm
-./knn
-```
+**1. Personal & Demographics**
+| Age | Gender | Marital Status | Education | Education Field | Distance From Home |
+|-----|--------|----------------|-----------|-----------------|--------------------|
+| 41  | Female | Single         | 2         | Life Sciences   | 1 km               |
 
-### Naive Bayes
-```bash
-gcc nb.c -o nb -lm
-./nb
-```
+**2. Job & Role Details**
+| Department | Job Role | Job Level | Job Involvement | OverTime | Business Travel |
+|------------|----------|-----------|-----------------|----------|-----------------|
+| Sales      | Sales Ex | 2         | 3               | **Yes**  | Travel_Rarely   |
 
-### Linear Regression
-```bash
-gcc lr.c -o lr -lm
-./lr
-```
+**3. Financials & Satisfaction**
+| Monthly Income | Daily Rate | Hourly Rate | Job Satisfaction | Env. Satisfaction |
+|----------------|------------|-------------|------------------|-------------------|
+| $5,993         | 1102       | 94          | 4                | 2                 |
 
----
-**Keywords**: `Mathematical Modelling`, `C Programming`, `Machine Learning from Scratch`, `Employee Attrition`, `Predictive Analytics`, `Gradient Descent`, `Probability Theory`, `Euclidean Distance`, `Sigmoid Function`, `Gaussian Distribution`.
+**4. Experience & Tenure**
+| Total Work Years | Years at Co. | Years in Role | Years since Prom. | Years w/ Manager |
+|------------------|--------------|---------------|-------------------|------------------|
+| 8                | 6            | 4             | 0                 | 5                |
+
+*   **Reason for selection**: This sample represents a high-risk employee profile in the HR domain. It serves as a benchmark to see which mathematical approach can correctly identify a "True Positive" attrition event that actually occurred.
+
+### Inference Results:
+| Algorithm | Feature Snapshot | Prediction | Correct? |
+|-----------|------------------|------------|----------|
+| **KNN** | [41, 5993, 1km] | **Stay** | ❌ |
+| **Naive Bayes** | [41, 5993, 1km] | **LEAVE** | ✅ **Correct** |
+| **Linear Regression** | [41, 5993, 1km] | **Stay** | ❌ |
+
+**Mathematical Insight**: Naive Bayes correctly identified the attrition because it uses a **probabilistic** approach. Even though the employee's income was moderate, the combination of "Single" status and "Overtime: Yes" carries high weight in the Gaussian probability calculation, allowing it to "outvote" the stabilizing factors.

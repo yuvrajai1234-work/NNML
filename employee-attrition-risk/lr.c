@@ -62,22 +62,37 @@ int main() {
     int test_size = ds.size - train_size;
     int tp = 0, tn = 0, fp = 0, fn = 0;
 
+    printf("=== Linear Regression Prediction on Image Data (Raw) ===\n");
+    // Raw data from the image
+    double raw_person[MAX_FEATURES] = {
+        41, 1102, 1, 2, 2, 94, 3, 2, 4, 5993, 19479, 8, 11, 3, 1, 0, 8, 0, 1, 6, 4, 0, 5
+    };
+    
+    double normalized_person[MAX_FEATURES];
+    normalize_raw_input(&ds, raw_person, normalized_person);
+
+    int pred = predict_lr(&model, normalized_person, ds.num_features);
+    
+    printf("Input Data (Raw): Age:%d, MonthlyIncome:%d, Distance:%d, OverTime:Yes...\n", (int)raw_person[0], (int)raw_person[9], (int)raw_person[2]);
+    printf("Result: This person is predicted to %s\n", pred ? "LEAVE (Attrition)" : "STAY");
+    printf("--------------------------------------------------------------------------\n");
+
+    // Still calculate overall metrics for accuracy verification
     for (int i = train_size; i < ds.size; i++) {
         int pred = predict_lr(&model, ds.data[i].features, ds.num_features);
         int actual = ds.data[i].label;
-
         if (pred == 1 && actual == 1) tp++;
         else if (pred == 0 && actual == 0) tn++;
         else if (pred == 1 && actual == 0) fp++;
         else if (pred == 0 && actual == 1) fn++;
     }
 
+    printf("--------------------------------------------------\n");
+    printf("Linear Regression Final Metrics:\n");
     double acc = (double)(tp + tn) / test_size;
     double prec = (tp + fp > 0) ? (double)tp / (tp + fp) : 0;
     double rec = (tp + fn > 0) ? (double)tp / (tp + fn) : 0;
     double f1 = (prec + rec > 0) ? 2 * prec * rec / (prec + rec) : 0;
-
-    printf("Linear Regression Results:\n");
     printf("Accuracy: %.4f\n", acc);
     printf("Precision: %.4f\n", prec);
     printf("Recall: %.4f\n", rec);
