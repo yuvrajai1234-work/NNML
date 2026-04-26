@@ -40,26 +40,8 @@ Before analyzing the outcomes, it is essential to define the performance metrics
 - `dataset.h`: Core header for loading, normalizing, and shuffling the CSV data for zero-dependency execution.
 - `IBM_HR_Attrition.csv`: The dataset sourced from Kaggle/IBM.
 
-## 📈 Model Outcomes
-Results based on an 80/20 train/test split:
-
-| Algorithm | Accuracy | Precision | Recall | F1-Score |
-|-----------|----------|-----------|--------|----------|
-| **KNN** | 0.8469 | 0.8571 | 0.1200 | 0.2105 |
-| **Naive Bayes** | 0.8163 | 0.4643 | 0.5200 | 0.4906 |
-| **Linear Regression** | 0.8367 | 1.0000 | 0.0400 | 0.0769 |
-
-### Sample Predictions (Process Check)
-| Case ID | Actual Attrition | Predicted Attrition | Result |
-|---------|------------------|---------------------|---------|
-| 1       | No               | No                  | Correct |
-| 2       | Yes              | No                  | Wrong   |
-| 3       | Yes              | No                  | Wrong   |
-| 4       | No               | No                  | Correct |
-| 5       | No               | No                  | Correct |
-
 ## 🚀 How to Run
-Ensure you have a C compiler (like `gcc`) installed. Open your terminal in the project folder and run:
+Ensure you have a C compiler (like `gcc`) installed. Open your terminal in the `employee-attrition-risk` folder and run:
 
 ### K-Nearest Neighbors
 ```bash
@@ -80,4 +62,5 @@ gcc lr.c -o lr -lm
 ```
 
 ---
-**Keywords**: `Mathematical Modelling`, `C Programming`, `Machine Learning from Scratch`, `Employee Attrition`, `Predictive Analytics`, `Gradient Descent`, `Probability Theory`, `Euclidean Distance`, `Sigmoid Function`, `Gaussian Distribution`.
+**Detailed Analysis**: For full model results, accuracy comparisons, and specific real-world validation tests, please refer to the internal [README.md](./employee-attrition-risk/README.md).
+
