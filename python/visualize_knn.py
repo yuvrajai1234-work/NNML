@@ -10,8 +10,15 @@ plt.style.use('dark_background')
 accent_color = '#00d2ff'
 secondary_color = '#ff007a'
 
+import os
+
 # Load the dataset
-df = pd.read_csv('IBM_HR_Attrition.csv')
+csv_path = os.path.join(os.path.dirname(__file__), '..', 'employee-attrition-risk', 'IBM_HR_Attrition.csv')
+if not os.path.exists(csv_path):
+    # Try current directory as fallback
+    csv_path = 'IBM_HR_Attrition.csv'
+
+df = pd.read_csv(csv_path)
 
 # Features: Age vs MonthlyIncome
 X = df[['Age', 'MonthlyIncome']]

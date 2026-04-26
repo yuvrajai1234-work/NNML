@@ -9,7 +9,13 @@ plt.style.use('dark_background')
 stay_color = '#00d2ff'
 leave_color = '#ff007a'
 
-df = pd.read_csv('IBM_HR_Attrition.csv')
+import os
+
+csv_path = os.path.join(os.path.dirname(__file__), '..', 'employee-attrition-risk', 'IBM_HR_Attrition.csv')
+if not os.path.exists(csv_path):
+    csv_path = 'IBM_HR_Attrition.csv'
+
+df = pd.read_csv(csv_path)
 feature = 'Age'
 stay = df[df['Attrition'] == 'No'][feature]
 attrition = df[df['Attrition'] == 'Yes'][feature]

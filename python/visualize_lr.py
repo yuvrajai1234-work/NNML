@@ -7,7 +7,13 @@ plt.style.use('dark_background')
 accent_color = '#00d2ff'
 trend_color = '#ff007a'
 
-df = pd.read_csv('IBM_HR_Attrition.csv')
+import os
+
+csv_path = os.path.join(os.path.dirname(__file__), '..', 'employee-attrition-risk', 'IBM_HR_Attrition.csv')
+if not os.path.exists(csv_path):
+    csv_path = 'IBM_HR_Attrition.csv'
+
+df = pd.read_csv(csv_path)
 df['Attrition_Num'] = df['Attrition'].apply(lambda x: 1 if x == 'Yes' else 0)
 
 features = ['Age', 'MonthlyIncome', 'TotalWorkingYears', 'DistanceFromHome']
