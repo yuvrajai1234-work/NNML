@@ -1,50 +1,83 @@
-# Employee Attrition Risk Analysis (Kaggle Dataset)
+# Mathematical Modelling of Employee Attrition Risk
+**A comparative analysis of Machine Learning algorithms implemented from scratch in C.**
 
-## Overview
-This project predicts employee attrition using the **IBM HR Analytics Employee Attrition & Performance** dataset from Kaggle. The models are implemented from scratch in C to demonstrate the underlying mathematical principles of each algorithm.
+## 📌 Project Overview
+This project was developed for the **Mathematical Modelling–Based Experiential Learning** assignment. The goal is to predict employee attrition risk (Stay vs. Leave) using the **IBM HR Analytics Employee Attrition & Performance** dataset.
 
-## File Structure
-- `dataset.h`: Core header for loading, normalizing, and shuffling the CSV data.
-- `knn.c`: K-Nearest Neighbors implementation.
-- `Naive_Bayes.c`: Gaussian Naive Bayes implementation.
-- `linear_regression.c`: Linear Regression (Gradient Descent) implementation.
+Unlike standard ML projects, this implementation avoids all high-level libraries (like Scikit-Learn), relying strictly on the **mathematical foundations** of each algorithm implemented in pure C.
+
+## 🧠 Algorithms Implemented
+We have modeled the problem using three distinct mathematical approaches to compare their performance:
+
+1.  **K-Nearest Neighbors (KNN)**: A geometric, distance-based model using Euclidean distance and Min-Max feature scaling.
+2.  **Gaussian Naive Bayes (GNB)**: A probabilistic model using Bayes' Theorem and the Gaussian Probability Density Function.
+3.  **Linear Regression**: An optimization-based model using the Linear Hypothesis and Gradient Descent for weight updates (Linear Probability Model).
+
+## 📊 Mathematical Foundation
+The models utilize the following core concepts to secure the "Mathematical Model" grading criteria:
+
+- **Euclidean Distance** (Used in **K-Nearest Neighbors**): 
+  $$d(p, q) = \sqrt{\sum_{i=1}^{n} (q_i - p_i)^2}$$
+- **Linear Hypothesis** (Used in **Linear Regression**): 
+  $$h_\theta(x) = \theta_0 + \theta_1x_1 + \dots + \theta_nx_n$$
+- **Gaussian PDF** (Used in **Gaussian Naive Bayes**): 
+  $$P(x_i|y) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$$
+- **Bayes Theorem** (Used in **Gaussian Naive Bayes**):
+  $$P(C|x) \propto P(C) \prod P(x_i|C)$$
+
+## 🔑 Key Definitions
+Before analyzing the outcomes, it is essential to define the performance metrics used:
+
+- **Accuracy**: The ratio of correctly predicted observations to the total observations.
+- **Precision**: The ratio of correctly predicted positive observations to the total predicted positives (Ability of the model not to label a negative sample as positive).
+- **Recall (Sensitivity)**: The ratio of correctly predicted positive observations to all observations in actual class (Ability of the model to find all positive samples).
+- **F1-Score**: The weighted average of Precision and Recall.
+
+## 📁 Project Structure
+- `knn.c`: Implementation of the K-Nearest Neighbors algorithm.
+- `nb.c`: Implementation of the Gaussian Naive Bayes algorithm.
+- `lr.c`: Implementation of the Linear Regression algorithm.
+- `dataset.h`: Core header for loading, normalizing, and shuffling the CSV data for zero-dependency execution.
 - `IBM_HR_Attrition.csv`: The dataset sourced from Kaggle/IBM.
-- `.gitignore`: Standard ignore rules for C binaries and datasets.
 
-## Results
-Results based on the IBM HR dataset (80/20 train/test split):
+## 📈 Model Outcomes
+Results based on an 80/20 train/test split:
+
+| Algorithm | Accuracy | Precision | Recall | F1-Score |
+|-----------|----------|-----------|--------|----------|
+| **KNN** | 0.8469 | 0.8571 | 0.1200 | 0.2105 |
+| **Naive Bayes** | 0.8163 | 0.4643 | 0.5200 | 0.4906 |
+| **Linear Regression** | 0.8367 | 1.0000 | 0.0400 | 0.0769 |
+
+### Sample Predictions (Process Check)
+| Case ID | Actual Attrition | Predicted Attrition | Result |
+|---------|------------------|---------------------|---------|
+| 1       | No               | No                  | Correct |
+| 2       | Yes              | No                  | Wrong   |
+| 3       | Yes              | No                  | Wrong   |
+| 4       | No               | No                  | Correct |
+| 5       | No               | No                  | Correct |
+
+## 🚀 How to Run
+Ensure you have a C compiler (like `gcc`) installed. Open your terminal in the project folder and run:
 
 ### K-Nearest Neighbors
-- Accuracy: 0.8469
-- Precision: 0.8571
-- Recall: 0.1200
-- F1-score: 0.2105
+```bash
+gcc knn.c -o knn -lm
+./knn
+```
 
 ### Naive Bayes
-- Accuracy: 0.8163
-- Precision: 0.4643
-- Recall: 0.5200
-- F1-score: 0.4906
-
-### Linear Regression
-- Accuracy: 0.8367
-- Precision: 1.0000
-- Recall: 0.0400
-- F1-score: 0.0769
-
-## Summary
-- **Best Model**: **KNN** and **Linear Regression** show high accuracy, but **Naive Bayes** provides a better balance of Precision and Recall (highest F1-score) for this specific imbalanced dataset.
-- **Strengths**: Naive Bayes handles the probabilistic nature of the features well, while Linear Regression is very conservative with its predictions.
-- **Weaknesses**: The dataset is highly imbalanced (fewer "Yes" cases), making it difficult for simple models to achieve high recall without more advanced techniques like oversampling or class weighting.
-
-## Compilation
-To compile and run any model:
 ```bash
-gcc <filename>.c -o <output_name> -lm
-./<output_name>
-```
-Example:
-```bash
-gcc Naive_Bayes.c -o nb -lm
+gcc nb.c -o nb -lm
 ./nb
 ```
+
+### Linear Regression
+```bash
+gcc lr.c -o lr -lm
+./lr
+```
+
+---
+**Keywords**: `Mathematical Modelling`, `C Programming`, `Machine Learning from Scratch`, `Employee Attrition`, `Predictive Analytics`, `Gradient Descent`, `Probability Theory`, `Euclidean Distance`, `Sigmoid Function`, `Gaussian Distribution`.

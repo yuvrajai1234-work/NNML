@@ -21,6 +21,7 @@ LRModel train_lr(Dataset* train, double lr, int epochs) {
                 y_pred += model.weights[j] * train->data[i].features[j];
             }
             double error = y_pred - train->data[i].label;
+            
             for (int j = 0; j < train->num_features; j++) {
                 dw[j] += error * train->data[i].features[j];
             }
