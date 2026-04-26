@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/MinGW/include",
+                "C:/MinGW/lib/gcc/mingw32/6.3.0/include",
+                "C:/MinGW/lib/gcc/mingw32/6.3.0/include-fixed",
+                "C:/MinGW/mingw32/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "_USE_MATH_DEFINES"
+            ],
+            "compilerPath": "C:/MinGW/bin/gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x86",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "C:/MinGW/include",
+                    "C:/MinGW/lib/gcc/mingw32/6.3.0/include",
+                    "C:/MinGW/mingw32/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

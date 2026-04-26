@@ -6,6 +6,17 @@
 #include <string.h>
 #include <math.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+char* custom_strdup(const char* s) {
+    char* d = malloc(strlen(s) + 1);
+    if (d == NULL) return NULL;
+    strcpy(d, s);
+    return d;
+}
+
 #define MAX_FEATURES 23
 #define MAX_SAMPLES 1500
 
@@ -23,7 +34,7 @@ typedef struct {
 } Dataset;
 
 // Indices of numeric features in the IBM dataset
-int numeric_indices[] = {0, 3, 5, 6, 10, 12, 13, 14, 16, 18, 19, 20, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34};
+static int numeric_indices[] = {0, 3, 5, 6, 10, 12, 13, 14, 16, 18, 19, 20, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34};
 
 Dataset load_dataset(const char* filename) {
     Dataset ds;
@@ -41,7 +52,7 @@ Dataset load_dataset(const char* filename) {
     fgets(line, sizeof(line), file);
 
     while (fgets(line, sizeof(line), file) && ds.size < MAX_SAMPLES) {
-        char* tmp = strdup(line);
+        char* tmp = custom_strdup(line);
         char* token;
         int col = 0;
         int feat_idx = 0;
